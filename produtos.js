@@ -7,6 +7,8 @@
 //  2. Quando criar suas lojas no Mercado Livre / Shopee /
 //     Instagram, cole os links abaixo (ou deixe "" para
 //     esconder o botão).
+//  3. O banner de promoção da página inicial também é
+//     configurado aqui.
 // ============================================================
 
 const CONFIG = {
@@ -17,30 +19,53 @@ const CONFIG = {
   instagram: "",             // ex.: "https://instagram.com/caramelopet"
   mercadoLivre: "",          // ex.: "https://loja.mercadolivre.com.br/caramelo-pet"
   shopee: "",                // ex.: "https://shopee.com.br/caramelopet"
+
+  // Banner principal da página
+  banner: {
+    titulo: "Semana do Pet",
+    destaque: "até 30% OFF",
+    texto: "Higiene, brinquedos e conforto com desconto de lançamento.",
+    botao: "Ver ofertas",
+  },
 };
 
 // ============================================================
 //  PRODUTOS
 // ============================================================
 //  Para cada produto:
-//    nome      → nome que aparece no site
-//    preco     → preço em reais (use ponto, ex.: 29.90)
-//    categoria → Passeio, Brinquedos, Alimentação, Conforto ou Higiene
-//                (pode criar categorias novas — os filtros são automáticos)
-//    descricao → uma frase curta de venda
-//    emoji     → aparece enquanto você não tem foto
-//    foto      → opcional: caminho de uma foto sua,
-//                ex.: foto: "fotos/coleira.jpg"
-//                (crie uma pasta "fotos" ao lado deste arquivo)
+//    nome        → nome que aparece no site
+//    preco       → preço em reais (use ponto, ex.: 29.90)
+//    precoAntigo → opcional: preço "de" riscado. Se preencher,
+//                  o produto ganha selo de desconto e entra na
+//                  seção Ofertas
+//    especie     → "Cachorro", "Gato" ou "Outros" (vira o menu)
+//    categoria   → subcategoria dentro da espécie (vira o submenu)
+//    descricao   → uma frase curta de venda
+//    emoji       → aparece enquanto você não tem foto
+//    foto        → opcional: caminho de uma foto sua,
+//                  ex.: foto: "fotos/coleira.jpg"
+//    destaque    → true para aparecer no carrossel "Mais vendidos"
 //
 //  Estes produtos são EXEMPLOS típicos da 25 de Março / Brás.
 //  Apague e coloque os seus!
 // ============================================================
 
 const PRODUTOS = [
+  // ---------- CACHORRO ----------
+  {
+    nome: "Tapete higiênico — 30 unidades",
+    preco: 49.9,
+    precoAntigo: 64.9,
+    especie: "Cachorro",
+    categoria: "Higiene",
+    descricao: "Super absorvente, com atrativo canino. O campeão de vendas.",
+    emoji: "🧻",
+    destaque: true,
+  },
   {
     nome: "Coleira ajustável com fivela",
     preco: 19.9,
+    especie: "Cachorro",
     categoria: "Passeio",
     descricao: "Nylon reforçado, tamanhos P ao G, várias cores.",
     emoji: "🦮",
@@ -48,13 +73,17 @@ const PRODUTOS = [
   {
     nome: "Guia retrátil 5 metros",
     preco: 39.9,
+    especie: "Cachorro",
     categoria: "Passeio",
     descricao: "Trava de segurança e cabo confortável, até 15 kg.",
     emoji: "🐕",
+    destaque: true,
   },
   {
     nome: "Peitoral acolchoado",
     preco: 34.9,
+    precoAntigo: 44.9,
+    especie: "Cachorro",
     categoria: "Passeio",
     descricao: "Não força o pescoço — ideal pra cães que puxam.",
     emoji: "🎽",
@@ -62,6 +91,7 @@ const PRODUTOS = [
   {
     nome: "Mordedor de borracha maciça",
     preco: 14.9,
+    especie: "Cachorro",
     categoria: "Brinquedos",
     descricao: "Resistente até pra destruidores profissionais.",
     emoji: "🦴",
@@ -69,13 +99,16 @@ const PRODUTOS = [
   {
     nome: "Bolinha com apito",
     preco: 9.9,
+    especie: "Cachorro",
     categoria: "Brinquedos",
     descricao: "O clássico que nenhum cachorro resiste.",
     emoji: "🎾",
+    destaque: true,
   },
   {
     nome: "Corda dental trançada",
     preco: 12.9,
+    especie: "Cachorro",
     categoria: "Brinquedos",
     descricao: "Diverte e ainda ajuda a limpar os dentes.",
     emoji: "🪢",
@@ -83,6 +116,7 @@ const PRODUTOS = [
   {
     nome: "Comedouro duplo inox",
     preco: 29.9,
+    especie: "Cachorro",
     categoria: "Alimentação",
     descricao: "Base antiderrapante, fácil de lavar.",
     emoji: "🥣",
@@ -90,36 +124,110 @@ const PRODUTOS = [
   {
     nome: "Bifinho de carne 500 g",
     preco: 24.9,
+    especie: "Cachorro",
     categoria: "Alimentação",
     descricao: "O petisco pra hora do agrado (ou do adestramento).",
     emoji: "🍖",
+    destaque: true,
   },
   {
     nome: "Caminha redonda de pelúcia",
     preco: 59.9,
+    precoAntigo: 79.9,
+    especie: "Cachorro",
     categoria: "Conforto",
     descricao: "Macia e quentinha, tamanhos P, M e G.",
     emoji: "🛏️",
+    destaque: true,
   },
   {
     nome: "Moletom pet com capuz",
     preco: 44.9,
+    especie: "Cachorro",
     categoria: "Conforto",
     descricao: "Estiloso e quentinho pros dias frios.",
     emoji: "🧥",
   },
   {
-    nome: "Tapete higiênico — 30 unidades",
-    preco: 49.9,
-    categoria: "Higiene",
-    descricao: "Super absorvente, com atrativo canino.",
-    emoji: "🧻",
-  },
-  {
     nome: "Shampoo neutro 500 ml",
     preco: 21.9,
+    especie: "Cachorro",
     categoria: "Higiene",
     descricao: "Pelos macios e cheirosos, pH balanceado.",
     emoji: "🧴",
+  },
+  {
+    nome: "Escova dental de dedo (silicone)",
+    preco: 11.9,
+    especie: "Cachorro",
+    categoria: "Higiene",
+    descricao: "Encaixa no dedo e facilita a escovação diária.",
+    emoji: "🪥",
+  },
+
+  // ---------- GATO ----------
+  {
+    nome: "Areia higiênica 4 kg",
+    preco: 19.9,
+    precoAntigo: 24.9,
+    especie: "Gato",
+    categoria: "Higiene",
+    descricao: "Alta absorção e controle de odor. A mais vendida do Brasil.",
+    emoji: "🐱",
+    destaque: true,
+  },
+  {
+    nome: "Fonte de água 2 L",
+    preco: 89.9,
+    precoAntigo: 119.9,
+    especie: "Gato",
+    categoria: "Alimentação",
+    descricao: "Água corrente filtrada — gatos bebem mais e ficam mais saudáveis.",
+    emoji: "⛲",
+    destaque: true,
+  },
+  {
+    nome: "Arranhador com bolinha",
+    preco: 49.9,
+    especie: "Gato",
+    categoria: "Brinquedos",
+    descricao: "Salva o sofá e diverte o gato. Base estável.",
+    emoji: "🐈",
+  },
+  {
+    nome: "Varinha com penas e catnip",
+    preco: 14.9,
+    especie: "Gato",
+    categoria: "Brinquedos",
+    descricao: "Irresistível: penas, guizo e erva-de-gato.",
+    emoji: "🪶",
+  },
+  {
+    nome: "Cama toca aconchego",
+    preco: 64.9,
+    especie: "Gato",
+    categoria: "Conforto",
+    descricao: "Fechadinha do jeito que os gatos amam.",
+    emoji: "🏠",
+  },
+
+  // ---------- OUTROS ----------
+  {
+    nome: "Removedor de pelos rolo adesivo",
+    preco: 12.9,
+    especie: "Outros",
+    categoria: "Casa",
+    descricao: "Roupa e sofá sem pelos em segundos. Refil fácil.",
+    emoji: "🧹",
+  },
+  {
+    nome: "Máquina de tosa profissional",
+    preco: 119.9,
+    precoAntigo: 149.9,
+    especie: "Outros",
+    categoria: "Higiene",
+    descricao: "Silenciosa, sem fio, com 4 pentes de altura.",
+    emoji: "✂️",
+    destaque: true,
   },
 ];
