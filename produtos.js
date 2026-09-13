@@ -20,13 +20,45 @@ const CONFIG = {
   mercadoLivre: "",          // ex.: "https://loja.mercadolivre.com.br/caramelo-pet"
   shopee: "",                // ex.: "https://shopee.com.br/caramelopet"
 
-  // Banner principal da página
-  banner: {
-    titulo: "Semana do Pet",
-    destaque: "até 30% OFF",
-    texto: "Higiene, brinquedos e conforto com desconto de lançamento.",
-    botao: "Ver ofertas",
+  // Frete cobrado no pagamento online (o WhatsApp permite combinar caso a caso)
+  frete: {
+    fixo: 19.9,        // valor do frete
+    gratisAcima: 149.9 // pedidos a partir deste valor têm frete grátis
   },
+
+  // Banners da página inicial (o site passa um por vez, com bolinhas)
+  //   kicker  → letreiro pequeno em cima
+  //   frase   → frase grande do banner
+  //   destaque→ parte da frase que ganha cor de destaque
+  //   especie → opcional: o botão leva pra essa espécie
+  //             (sem especie, o botão leva pras Ofertas)
+  banners: [
+    {
+      kicker: "Semana do Pet",
+      frase: "Tudo pro seu melhor amigo",
+      destaque: "até 30% OFF",
+      texto: "Higiene, brinquedos e conforto com desconto de lançamento.",
+      botao: "Ver ofertas",
+      emoji: "🐶",
+    },
+    {
+      kicker: "Entrega",
+      frase: "Frete grátis",
+      destaque: "acima de R$ 149",
+      texto: "Complete o carrinho e a entrega é por nossa conta.",
+      botao: "Aproveitar",
+      emoji: "📦",
+    },
+    {
+      kicker: "Novidade",
+      frase: "Chegou a linha felina",
+      destaque: "miau!",
+      texto: "Areia, fonte de água, arranhador e muito mimo pro seu gato.",
+      botao: "Ver produtos de gato",
+      emoji: "🐱",
+      especie: "Gato",
+    },
+  ],
 };
 
 // ============================================================
@@ -231,3 +263,7 @@ const PRODUTOS = [
     destaque: true,
   },
 ];
+
+// Permite que o servidor de pagamento (api/checkout.js) leia este
+// mesmo catálogo — não remova esta linha.
+if (typeof module !== "undefined") module.exports = { CONFIG, PRODUTOS };

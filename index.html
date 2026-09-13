@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Caramelo Pet — produtos para cães e gatos com preço de amigo. Peça pelo WhatsApp.">
+<meta name="description" content="Caramelo Pet — produtos para cães e gatos com preço de amigo. Pague online ou pelo WhatsApp.">
 </head>
 <body style="margin:0">
 <title>Caramelo Pet</title>
@@ -135,10 +135,16 @@
     background: linear-gradient(115deg, var(--caramelo-deep), var(--caramelo) 55%, #E0A25C);
     color: #FFF8EE; padding: 34px 30px; position: relative;
   }
-  .hero::after {
-    content: "🐶"; position: absolute; right: 24px; bottom: -14px;
-    font-size: 110px; opacity: .25; transform: rotate(-8deg);
+  .hero .mascote {
+    position: absolute; right: 24px; bottom: -14px;
+    font-size: 110px; opacity: .25; transform: rotate(-8deg); pointer-events: none;
   }
+  .dots { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+  .dots button {
+    width: 10px; height: 10px; border-radius: 50%; padding: 0;
+    background: var(--line); transition: background .15s ease, transform .15s ease;
+  }
+  .dots button[aria-current="true"] { background: var(--caramelo); transform: scale(1.25); }
   .hero .kicker { text-transform: uppercase; letter-spacing: .14em; font-size: .74rem; font-weight: 800; opacity: .9; }
   .hero h1 { font-size: clamp(1.7rem, 4.5vw, 2.6rem); line-height: 1.1; margin: 4px 0 2px; }
   .hero h1 .off { color: #FFE3B3; }
@@ -271,7 +277,16 @@
   .qty span { min-width: 20px; text-align: center; font-weight: 800; font-variant-numeric: tabular-nums; }
   .cart-empty { color: var(--ink-soft); text-align: center; padding: 40px 10px; }
   .drawer-foot { border-top: 1px solid var(--line); padding: 14px 18px 18px; display: flex; flex-direction: column; gap: 12px; }
+  .sub-row { display: flex; justify-content: space-between; font-size: .9rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
   .total-row { display: flex; justify-content: space-between; align-items: baseline; font-weight: 800; }
+  .mp-btn {
+    background: var(--caramelo); color: #fff; font-weight: 800; font-size: 1rem;
+    padding: 14px; border-radius: 14px; text-align: center; width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: filter .12s ease;
+  }
+  .mp-btn:hover { filter: brightness(1.08); }
+  .mp-btn[disabled], .zap-btn[disabled] { opacity: .6; cursor: default; }
   .total-row .val { font-family: "Baloo 2", sans-serif; font-size: 1.4rem; font-variant-numeric: tabular-nums; }
   .zap-btn {
     background: var(--zap); color: #fff; font-weight: 800; font-size: 1rem;
@@ -281,6 +296,15 @@
   }
   .zap-btn:hover { filter: brightness(1.08); }
   .zap-note { font-size: .78rem; color: var(--ink-soft); text-align: center; margin: 0; }
+
+  /* ---------- WhatsApp flutuante ---------- */
+  .zap-float {
+    position: fixed; right: 18px; bottom: 18px; z-index: 55;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--zap); display: grid; place-items: center;
+    box-shadow: var(--shadow); transition: transform .12s ease;
+  }
+  .zap-float:hover { transform: scale(1.07); }
 
   /* ---------- toast ---------- */
   .toast {
@@ -342,10 +366,12 @@
 <main class="wrap">
   <section class="hero" id="hero">
     <span class="kicker" id="hero-kicker">Semana do Pet</span>
-    <h1 id="hero-title">Tudo pro seu melhor amigo <span class="off" id="hero-off">até 30% OFF</span></h1>
+    <h1 id="hero-title"><span id="hero-titulo-txt">Tudo pro seu melhor amigo</span> <span class="off" id="hero-off">até 30% OFF</span></h1>
     <p id="hero-text">Higiene, brinquedos e conforto com desconto de lançamento.</p>
     <button class="cta" id="hero-cta">Ver ofertas</button>
+    <span class="mascote" id="hero-mascote" aria-hidden="true">🐶</span>
   </section>
+  <div class="dots" id="hero-dots"></div>
 
   <div class="bens">
     <div class="ben"><span class="i">📦</span><span>Envio para todo o Brasil<small>Correios com código de rastreio</small></span></div>
@@ -423,11 +449,19 @@
   </div>
   <div class="items" id="items"></div>
   <div class="drawer-foot">
+    <div class="sub-row"><span>Subtotal</span><span id="subtotal">R$ 0,00</span></div>
+    <div class="sub-row" id="frete-row" hidden><span>Frete</span><span id="frete">R$ 0,00</span></div>
+    <p class="zap-note" id="frete-hint" hidden></p>
     <div class="total-row"><span>Total</span><span class="val" id="total">R$ 0,00</span></div>
-    <button class="zap-btn" id="send-order">📲 Fazer pedido no WhatsApp</button>
-    <p class="zap-note">Pagamento e entrega são combinados na conversa.</p>
+    <button class="mp-btn" id="pay-online">💳 Pagar com Pix ou cartão</button>
+    <button class="zap-btn" id="send-order">📲 Finalizar pelo WhatsApp</button>
+    <p class="zap-note">No WhatsApp dá pra combinar frete e pagamento na conversa.</p>
   </div>
 </aside>
+
+<a class="zap-float" href="#" data-zap-link aria-label="Falar com a loja no WhatsApp">
+  <svg viewBox="0 0 24 24" width="30" height="30" fill="#fff" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.3-.4 0-.5.1-.7l.4-.5c.1-.2.2-.3.3-.5v-.5L9.6 7.6c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1.2 2.1-.4 3.6a12 12 0 0 0 4.5 4.5c1.7.9 2.6 1 3.5.8.6-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.6-.3z"/></svg>
+</a>
 
 <div class="toast" id="toast" role="status"></div>
 
@@ -442,11 +476,29 @@
   $("brand-name").textContent = CONFIG.nomeDaLoja;
   $("foot-brand").textContent = CONFIG.nomeDaLoja;
   $("foot-credit").textContent = `© ${new Date().getFullYear()} ${CONFIG.nomeDaLoja}`;
-  if (CONFIG.banner) {
-    $("hero-kicker").textContent = CONFIG.banner.titulo || "";
-    $("hero-off").textContent = CONFIG.banner.destaque || "";
-    $("hero-text").textContent = CONFIG.banner.texto || "";
-    $("hero-cta").textContent = CONFIG.banner.botao || "Ver ofertas";
+  // ---- banners rotativos ----
+  const banners = (CONFIG.banners && CONFIG.banners.length) ? CONFIG.banners : [];
+  let bannerAtual = 0;
+  function mostrarBanner(n) {
+    if (!banners.length) return;
+    bannerAtual = ((n % banners.length) + banners.length) % banners.length;
+    const b = banners[bannerAtual];
+    $("hero-kicker").textContent = b.kicker || "";
+    $("hero-titulo-txt").textContent = b.frase || "";
+    $("hero-off").textContent = b.destaque || "";
+    $("hero-text").textContent = b.texto || "";
+    $("hero-cta").textContent = b.botao || "Ver ofertas";
+    $("hero-mascote").textContent = b.emoji || "🐾";
+    $("hero-dots").innerHTML = banners.length > 1
+      ? banners.map((_, i) =>
+          `<button data-banner="${i}" aria-current="${i === bannerAtual}" aria-label="Banner ${i + 1}"></button>`
+        ).join("")
+      : "";
+  }
+  mostrarBanner(0);
+  const semAnimacao = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (banners.length > 1 && !semAnimacao) {
+    setInterval(() => mostrarBanner(bannerAtual + 1), 6000);
   }
   const footLinks = [
     `<a href="#" data-zap-link>📲 WhatsApp</a>`,
@@ -577,13 +629,32 @@
       .filter((e) => e.p && e.qty > 0);
   }
 
+  function calcFrete(subtotal) {
+    if (!CONFIG.frete || !subtotal) return 0;
+    return subtotal >= CONFIG.frete.gratisAcima ? 0 : CONFIG.frete.fixo;
+  }
+
   function renderCart() {
     const entries = cartEntries();
     const count = entries.reduce((s, e) => s + e.qty, 0);
-    const total = entries.reduce((s, e) => s + e.qty * e.p.preco, 0);
+    const subtotal = entries.reduce((s, e) => s + e.qty * e.p.preco, 0);
+    const frete = calcFrete(subtotal);
+    const total = subtotal + frete;
     $("cart-count").textContent = count;
+    $("subtotal").textContent = brl(subtotal);
+    if (CONFIG.frete && entries.length) {
+      $("frete-row").hidden = false;
+      $("frete").textContent = frete ? brl(frete) : "Grátis 🎉";
+      $("frete-hint").hidden = !frete;
+      if (frete) $("frete-hint").textContent =
+        `Faltam ${brl(CONFIG.frete.gratisAcima - subtotal)} pro frete grátis!`;
+    } else {
+      $("frete-row").hidden = true;
+      $("frete-hint").hidden = true;
+    }
     $("total").textContent = brl(total);
     $("send-order").disabled = !entries.length;
+    $("pay-online").disabled = !entries.length;
     $("items").innerHTML = entries.length
       ? entries.map((e) => `<div class="item">
           <div class="thumb">${picHtml(e.p)}</div>
@@ -620,15 +691,56 @@
   function sendOrder() {
     const entries = cartEntries();
     if (!entries.length) return;
-    const total = entries.reduce((s, e) => s + e.qty * e.p.preco, 0);
+    const subtotal = entries.reduce((s, e) => s + e.qty * e.p.preco, 0);
+    const frete = calcFrete(subtotal);
     const lines = [
       `Olá! Quero fazer um pedido na *${CONFIG.nomeDaLoja}*:`,
       "",
       ...entries.map((e) => `▪ ${e.qty}x ${e.p.nome} — ${brl(e.qty * e.p.preco)}`),
       "",
-      `*Total: ${brl(total)}*`,
+      `Subtotal: ${brl(subtotal)}`,
+      `Frete: ${frete ? brl(frete) + " (a confirmar pelo CEP)" : "grátis"}`,
+      `*Total: ${brl(subtotal + frete)}*`,
     ];
     window.open(zapUrl(lines.join("\n")), "_blank", "noopener");
+  }
+
+  // ---- pagamento online (Mercado Pago via api/checkout.js) ----
+  async function payOnline() {
+    const entries = cartEntries();
+    if (!entries.length) return;
+    const btn = $("pay-online");
+    btn.disabled = true;
+    const rotulo = btn.textContent;
+    btn.textContent = "Gerando pagamento…";
+    try {
+      const r = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itens: entries.map((e) => ({ i: Number(e.i), qty: e.qty })) }),
+      });
+      const dados = await r.json();
+      if (!r.ok || !dados.url) throw new Error(dados.erro || "falha ao gerar o pagamento");
+      window.location.href = dados.url;
+    } catch (_) {
+      toast("Pagamento online indisponível agora — finalize pelo WhatsApp 😉");
+      btn.disabled = false;
+      btn.textContent = rotulo;
+    }
+  }
+
+  // volta do Mercado Pago
+  const situacao = new URLSearchParams(location.search).get("pagamento");
+  if (situacao === "aprovado") {
+    cart = {}; saveCart();
+    setTimeout(() => toast("Pagamento aprovado! 🎉 Já estamos preparando seu pedido."), 400);
+    history.replaceState(null, "", location.pathname);
+  } else if (situacao === "pendente") {
+    setTimeout(() => toast("Pagamento em processamento — te avisamos quando aprovar."), 400);
+    history.replaceState(null, "", location.pathname);
+  } else if (situacao === "erro") {
+    setTimeout(() => toast("O pagamento não foi concluído. Tente de novo ou chame no WhatsApp."), 400);
+    history.replaceState(null, "", location.pathname);
   }
 
   // ---- eventos ----
@@ -677,7 +789,15 @@
     closeMenus();
   });
 
-  $("hero-cta").addEventListener("click", () => aplicar("Tudo", "Tudo", true));
+  $("hero-cta").addEventListener("click", () => {
+    const b = banners[bannerAtual] || {};
+    if (b.especie) aplicar(b.especie, "Tudo", false);
+    else aplicar("Tudo", "Tudo", true);
+  });
+  $("hero-dots").addEventListener("click", (ev) => {
+    const d = ev.target.closest("[data-banner]");
+    if (d) mostrarBanner(Number(d.dataset.banner));
+  });
   $("sort").addEventListener("change", renderGrid);
   $("search").addEventListener("input", (ev) => {
     filtro.busca = ev.target.value;
@@ -689,6 +809,7 @@
   $("scrim").addEventListener("click", () => setDrawer(false));
   document.addEventListener("keydown", (ev) => { if (ev.key === "Escape") { setDrawer(false); closeMenus(); } });
   $("send-order").addEventListener("click", sendOrder);
+  $("pay-online").addEventListener("click", payOnline);
 
   renderNav();
   renderCats();
