@@ -1,4 +1,4 @@
-# Príncipe dos Cabelos
+# Ondina
 
 Loja online de cabelo humano. Tudo é vendido em **amarrado fechado de 100g**
 (90g de cabelo + 10g do elástico de amarração) — nunca em gramas fracionadas.
@@ -26,10 +26,10 @@ mexer no corpo, gere de novo antes de publicar.
 
 Cada produto aceita `foto: "fotos/nome-do-arquivo.jpg"`. Enquanto não houver
 foto, o site desenha uma mecha na cor informada em `tom`. Crie a pasta
-`principe/fotos/` e use um arquivo por produto.
+`ondina/fotos/` e use um arquivo por produto.
 
 ## Publicação
 
 Site estático. Na Vercel, criar um projeto apontando para este repositório
-com **Root Directory = `principe`**, para não conflitar com o outro site
+com **Root Directory = `ondina`**, para não conflitar com o outro site
 que vive na raiz.

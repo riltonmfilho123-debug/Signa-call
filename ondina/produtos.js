@@ -1,13 +1,13 @@
 /* ============================================================
-   PRÍNCIPE DOS CABELOS — configuração da loja
+   ONDINA — configuração da loja
    ============================================================
    Só este arquivo precisa ser editado no dia a dia.
    Tudo é vendido em AMARRADO DE 100g. Nunca em gramas soltas.
    ============================================================ */
 
 const CONFIG = {
-  marca: "Príncipe dos Cabelos",
-  assinatura: "Cabelo humano de procedência",
+  marca: "Ondina",
+  assinatura: "Cabelo humano selecionado",
 
   // 55 + DDD + número, só dígitos
   whatsapp: "5521000000000",

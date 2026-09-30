@@ -1,12 +1,4 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Cabelo humano de procedência em amarrado fechado de 100g. Envio por Sedex para todo o Brasil.">
-</head>
-<body>
-<title>Príncipe dos Cabelos</title>
+<title>Ondina</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&family=Jost:wght@300;400;500;600&display=swap">
 <style>
   /* Galeria escura: vitrine em grade larga, paleta tirada do próprio
@@ -20,7 +12,7 @@
     --marfim-2:   #B9A794;
     --mel:        #C9914E;
     --mel-claro:  #E8C9A0;
-    --vinho:      #6B2737;
+    --mar:        #17383A;
     --ok:         #57A86E;
     --display: "Prata", "Times New Roman", Georgia, serif;
     --corpo:   "Jost", "Helvetica Neue", Arial, sans-serif;
@@ -46,7 +38,7 @@
   /* ---------- topo ---------- */
   .aviso {
     margin: 0 -20px; padding: 9px 20px; text-align: center;
-    background: var(--vinho); color: var(--marfim);
+    background: var(--mar); color: var(--marfim);
     font-size: .74rem; letter-spacing: .16em; text-transform: uppercase;
   }
   header.topo {
@@ -57,7 +49,7 @@
   }
   .topo-in { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 18px; }
   .marca { display: flex; align-items: center; gap: 11px; margin-right: auto; min-width: 0; }
-  .coroa { width: 30px; height: 30px; flex: none; }
+  .emblema { width: 34px; height: 24px; flex: none; }
   .marca b { font-family: var(--display); font-size: 1.22rem; font-weight: 400; letter-spacing: .01em; white-space: nowrap; }
   .marca small { display: block; font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--marfim-2); }
   .carrinho-btn {
@@ -319,13 +311,14 @@
 <header class="topo">
   <div class="topo-in">
     <div class="marca">
-      <svg class="coroa" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <path d="M4 22 L4 11 L10 16 L16 8 L22 16 L28 11 L28 22 Z" fill="#C9914E"/>
-        <rect x="4" y="24" width="24" height="3" fill="#C9914E"/>
+      <svg class="emblema" viewBox="0 0 34 24" fill="none" aria-hidden="true">
+        <path d="M2 7C6.5 1.5 11 1.5 15.5 7S24.5 12.5 29 7" stroke="#C9914E" stroke-width="2" stroke-linecap="round"/>
+        <path d="M2 14C6.5 8.5 11 8.5 15.5 14S24.5 19.5 29 14" stroke="#C9914E" stroke-width="2" stroke-linecap="round" opacity=".62"/>
+        <path d="M2 21C6.5 15.5 11 15.5 15.5 21" stroke="#C9914E" stroke-width="2" stroke-linecap="round" opacity=".3"/>
       </svg>
       <span>
-        <b id="nome-marca">Príncipe dos Cabelos</b>
-        <small id="assinatura">Cabelo humano de procedência</small>
+        <b id="nome-marca">Ondina</b>
+        <small id="assinatura">Cabelo humano selecionado</small>
       </span>
     </div>
     <button class="carrinho-btn" id="abrir-carrinho">Sacola <span class="n" id="contador">0</span></button>
@@ -338,8 +331,8 @@
   <section class="abertura">
     <div>
       <span class="olho">Amarrado fechado de 100g</span>
-      <h1>A nobreza está <em>no fio</em>.</h1>
-      <p class="chamada">Cabelo humano selecionado amarrado por amarrado, do mesmo lote e da mesma cabeça. Você recebe em casa por Sedex, com a balança mostrada antes da compra.</p>
+      <h1>Cabelo bom se reconhece <em>no movimento</em>.</h1>
+      <p class="chamada">Cabelo humano selecionado amarrado por amarrado, do mesmo lote e da mesma cabeça. Cada anúncio traz o vídeo do fio balançando e a pesagem na balança: você vê antes de comprar.</p>
       <div class="botoes">
         <button class="btn-cheio" data-ir="vitrine">Ver os cabelos</button>
         <button class="btn-vazio" data-ir="calculadora">Quantos amarrados eu preciso?</button>
@@ -442,7 +435,7 @@
     <div class="procedencia">
       <div class="ponto">
         <h3>Fornecedor de anos</h3>
-        <p>Trabalhamos com o mesmo fornecedor que abastece há anos uma das maiores referências de cabelo do Rio de Janeiro. Mesma curadoria, mesma procedência.</p>
+        <p>Trabalhamos com o mesmo fornecedor que abastece há anos uma das maiores referências de cabelo do Rio de Janeiro. A mesma curadoria, a mesma procedência.</p>
       </div>
       <div class="ponto">
         <h3>Mesma cabeça, mesmo lote</h3>
@@ -515,7 +508,7 @@
 <footer class="rodape">
   <div class="rodape-in">
     <div>
-      <h3>Príncipe dos Cabelos</h3>
+      <h3 id="rodape-marca">Ondina</h3>
       <p>Cabelo humano de procedência, em amarrado fechado de 100g, com envio para todo o Brasil.</p>
     </div>
     <div>
@@ -805,6 +798,3 @@
   desenharSacola();
   calcular();
 </script>
-
-</body>
-</html>
