@@ -49,6 +49,26 @@ const CONFIG = {
     "bastante|cheio":   [3, 4],
     "bastante|muito":   [5, 6],
   },
+
+  /* ----------------------------------------------------------
+     PISO POR COMPRIMENTO
+     ----------------------------------------------------------
+     Quanto mais longo o cabelo, mais massa ele pede: a mesma
+     quantidade espalhada por mais fio deixa a ponta rala. Por isso
+     cada faixa de comprimento tem um mínimo de amarrados, e a
+     recomendação nunca desce abaixo dele.
+
+     Regra de balcão: 75cm nunca sai com menos de 270g — por isso
+     o piso ali é de 4 amarrados (360g).
+
+     Formato: comprimento máximo da faixa → mínimo de amarrados.
+     ---------------------------------------------------------- */
+  pisoPorComprimento: [
+    { ate: 45, minimo: 2 },
+    { ate: 60, minimo: 2 },
+    { ate: 70, minimo: 3 },
+    { ate: 999, minimo: 4 },
+  ],
 };
 
 /* ------------------------------------------------------------

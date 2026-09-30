@@ -185,7 +185,7 @@
 
   /* ---------- calculadora ---------- */
   .calc { background: var(--ink-2); border: 1px solid var(--line); border-radius: 2px; padding: 40px 42px; }
-  .calc-campos { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin: 26px 0 30px; }
+  .calc-campos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin: 26px 0 30px; }
   .campo > span { display: block; font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--marfim-2); margin-bottom: 10px; }
   .opcoes { display: flex; flex-wrap: wrap; gap: 8px; }
   .opcoes button {
@@ -281,6 +281,7 @@
   }
   .aviso-flutuante.mostra { transform: translate(-50%, 0); }
 
+  @media (max-width: 1040px) { .calc-campos { grid-template-columns: 1fr; } }
   @media (max-width: 880px) {
     .abertura, .balanca { grid-template-columns: 1fr; gap: 32px; }
     .balanca, .calc { padding: 32px 24px; }
@@ -367,13 +368,21 @@
     <div class="calc">
       <span class="olho">Antes de comprar</span>
       <h2>Quantos amarrados o seu cabelo pede</h2>
-      <p class="calc-intro">Não existe número fixo: depende do volume que você já tem e, principalmente, do resultado que você quer. A média fica entre 2 e 3 amarrados, mas quem procura um cabelo bem cheio costuma passar disso.</p>
+      <p class="calc-intro">Não existe número fixo: depende do volume que você já tem e, principalmente, do resultado que você quer. A média fica entre 2 e 3 amarrados, e sobe conforme o comprimento: quanto mais longo o cabelo, mais massa ele pede para a ponta não ficar rala.</p>
       <div class="calc-campos">
         <label class="campo"><span>O volume do seu cabelo hoje</span>
           <div class="opcoes" id="op-volume">
             <button data-v="pouco" aria-pressed="true">Pouco cabelo</button>
             <button data-v="medio" aria-pressed="false">Volume médio</button>
             <button data-v="bastante" aria-pressed="false">Bastante cabelo</button>
+          </div>
+        </label>
+        <label class="campo"><span>O comprimento que você quer</span>
+          <div class="opcoes" id="op-comprimento">
+            <button data-c="45" aria-pressed="true">Até 45cm</button>
+            <button data-c="60" aria-pressed="false">55 a 60cm</button>
+            <button data-c="70" aria-pressed="false">65 a 70cm</button>
+            <button data-c="75" aria-pressed="false">75cm ou mais</button>
           </div>
         </label>
         <label class="campo"><span>O resultado que você quer</span>
@@ -645,16 +654,25 @@
   }
 
   // ---- calculadora de amarrados ----
-  const escolha = { volume: "pouco", resultado: "discreto" };
+  const escolha = { volume: "pouco", resultado: "discreto", comprimento: 45 };
   const legendas = {
     discreto: "Alonga sem mudar muito o volume que você já tem.",
     cheio: "O ponto que a maioria das clientes procura: comprimento com corpo.",
     muito: "Volume de impacto, daquele que muda o rosto na foto.",
   };
 
+  function pisoDoComprimento(cm) {
+    const faixas = CONFIG.pisoPorComprimento || [];
+    const faixa = faixas.find((f) => cm <= f.ate);
+    return faixa ? faixa.minimo : 2;
+  }
+
   function faixaAmarrados() {
     const chave = escolha.volume + "|" + escolha.resultado;
-    return (CONFIG.recomendacao && CONFIG.recomendacao[chave]) || [2, 3];
+    const [baseMin, baseMax] = (CONFIG.recomendacao && CONFIG.recomendacao[chave]) || [2, 3];
+    // o comprimento nunca reduz a indicação: só empurra a faixa inteira para cima
+    const salto = Math.max(0, pisoDoComprimento(escolha.comprimento) - baseMin);
+    return [baseMin + salto, baseMax + salto];
   }
 
   function calcular() {
@@ -664,7 +682,10 @@
     $("calc-titulo").textContent = min === max
       ? `${min} amarrados · ${g(min)}g de cabelo`
       : `${min} a ${max} amarrados · ${g(min)}g a ${g(max)}g de cabelo`;
-    $("calc-texto").textContent = legendas[escolha.resultado];
+    const subiuPeloComprimento = min > (CONFIG.recomendacao[escolha.volume + "|" + escolha.resultado] || [2, 3])[0];
+    $("calc-texto").textContent = subiuPeloComprimento
+      ? legendas[escolha.resultado] + " Nesse comprimento a ponta pede mais massa para não ficar rala."
+      : legendas[escolha.resultado];
   }
 
   function textoAvaliacao() {
@@ -675,6 +696,7 @@
     return [
       `Olá! Quero a indicação de quantos amarrados eu preciso.`, "",
       `• Meu cabelo hoje: ${volume}`,
+      `• Comprimento que quero: ${escolha.comprimento >= 75 ? "75cm ou mais" : "até " + escolha.comprimento + "cm"}`,
       `• Quero: ${querido}`,
       `• O site sugeriu: ${sugestao}`, "",
       `Vou enviar a foto do meu cabelo aqui na conversa.`,
@@ -707,6 +729,7 @@
       salvar(); desenharSacola();
     }
     if (d.v) { escolha.volume = d.v; [...$("op-volume").children].forEach((b) => b.setAttribute("aria-pressed", b === alvo)); calcular(); }
+    if (d.c) { escolha.comprimento = Number(d.c); [...$("op-comprimento").children].forEach((b) => b.setAttribute("aria-pressed", b === alvo)); calcular(); }
     if (d.r) { escolha.resultado = d.r; [...$("op-resultado").children].forEach((b) => b.setAttribute("aria-pressed", b === alvo)); calcular(); }
   });
 
