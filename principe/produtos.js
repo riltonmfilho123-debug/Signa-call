@@ -20,8 +20,13 @@ const CONFIG = {
     elastico: 10,   // elástico de amarração
   },
 
+  /* O frete é por conta da cliente e cotado pelo CEP dela na hora
+     de fechar o pedido, porque a postagem é feita no balcão dos
+     Correios. O site não calcula: ele pede o CEP na mensagem. */
   frete: {
-    gratis: true,          // frete grátis para todo o Brasil
+    gratis: false,
+    transportadora: "Correios",
+    servico: "Sedex",
     prazoCapital: "2 a 5 dias úteis",
     prazoInterior: "4 a 9 dias úteis",
   },

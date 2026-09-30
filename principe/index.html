@@ -221,6 +221,14 @@
   .confirmar strong { display: block; font-weight: 500; font-size: 1.02rem; }
   .confirmar p { color: var(--marfim-2); font-size: .9rem; margin: 6px 0 0; max-width: 60ch; }
   .confirmar button { white-space: nowrap; }
+  .rastrear { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-top: 24px; }
+  .rastrear input {
+    background: var(--ink-3); border: 1px solid var(--line); color: var(--marfim);
+    font: inherit; padding: 14px 16px; border-radius: 2px; min-width: 0;
+  }
+  .rastrear input::placeholder { color: var(--marfim-2); }
+  .nota-rastreio { color: var(--marfim-2); font-size: .84rem; margin: 12px 0 0; }
+  @media (max-width: 620px) { .rastrear { grid-template-columns: 1fr; } }
   @media (max-width: 720px) { .confirmar { grid-template-columns: 1fr; } .confirmar button { width: 100%; } }
 
   /* ---------- procedência ---------- */
@@ -306,7 +314,7 @@
   }
 </style>
 
-<div class="aviso" id="faixa">Frete grátis para todo o Brasil · Envio por Sedex</div>
+<div class="aviso" id="faixa">Enviamos por Sedex para todo o Brasil · Código de rastreio no WhatsApp</div>
 
 <header class="topo">
   <div class="topo-in">
@@ -331,7 +339,7 @@
     <div>
       <span class="olho">Amarrado fechado de 100g</span>
       <h1>A nobreza está <em>no fio</em>.</h1>
-      <p class="chamada">Cabelo humano selecionado amarrado por amarrado, do mesmo lote e da mesma cabeça. Você recebe em casa, com a balança mostrada antes da compra.</p>
+      <p class="chamada">Cabelo humano selecionado amarrado por amarrado, do mesmo lote e da mesma cabeça. Você recebe em casa por Sedex, com a balança mostrada antes da compra.</p>
       <div class="botoes">
         <button class="btn-cheio" data-ir="vitrine">Ver os cabelos</button>
         <button class="btn-vazio" data-ir="calculadora">Quantos amarrados eu preciso?</button>
@@ -342,7 +350,7 @@
 
   <div class="garantias">
     <div><strong>100g pesados na balança</strong><span>90g de cabelo + 10g do elástico</span></div>
-    <div><strong>Sedex para todo o Brasil</strong><span id="prazo-garantia">2 a 5 dias úteis nas capitais</span></div>
+    <div><strong>Sedex com rastreio</strong><span id="prazo-garantia">2 a 5 dias úteis nas capitais</span></div>
     <div><strong>Troca em 7 dias</strong><span>Amarrado lacrado, sem uso</span></div>
     <div><strong>Consultoria de cor</strong><span>Acertamos o tom antes de enviar</span></div>
   </div>
@@ -485,8 +493,21 @@
       </details>
       <details>
         <summary>Como é o envio?</summary>
-        <p>Sedex para todo o Brasil, com código de rastreio, e o frete é por nossa conta. O amarrado é leve, então a caixa chega rápido: <span id="prazo-faq">2 a 5 dias úteis nas capitais</span>.</p>
+        <p>Postamos nos Correios, por Sedex, para todo o Brasil. O frete é calculado pelo seu CEP na hora de fechar o pedido — o amarrado é leve, então costuma sair barato. Assim que a encomenda é postada, o código de rastreio vai para você no WhatsApp. Prazo: <span id="prazo-faq">2 a 5 dias úteis nas capitais</span>.</p>
       </details>
+    </div>
+  </section>
+
+  <section class="bloco" id="rastreio">
+    <div class="calc">
+      <span class="olho">Depois da compra</span>
+      <h2>Acompanhe sua encomenda</h2>
+      <p class="calc-intro">Assim que o pedido é postado, o código de rastreio vai para você no WhatsApp. Guarde ele: é com esse código que você acompanha a entrega no site dos Correios, do mesmo jeito que acompanha qualquer compra.</p>
+      <div class="rastrear">
+        <input type="text" id="codigo-rastreio" placeholder="Cole aqui o código, ex.: AA123456789BR" autocomplete="off" spellcheck="false">
+        <button class="btn-cheio" id="btn-rastrear">Rastrear nos Correios</button>
+      </div>
+      <p class="nota-rastreio" id="nota-rastreio">O código é copiado e o site dos Correios abre em outra aba. É só colar lá.</p>
     </div>
   </section>
 </main>
@@ -501,6 +522,7 @@
       <h3>Como comprar</h3>
       <ul>
         <li>Monte a sacola por amarrados</li>
+        <li>Informe o CEP para o frete</li>
         <li>Acerte o tom no WhatsApp</li>
         <li>Pague no Pix ou no cartão</li>
         <li>Receba por Sedex com rastreio</li>
@@ -526,11 +548,11 @@
   <div class="itens" id="itens"></div>
   <div class="gaveta-pe">
     <div class="linha-conta"><span id="resumo-amarrados">0 amarrados · 0g</span><span id="subtotal">R$ 0,00</span></div>
-    <div class="linha-conta"><span>Frete</span><span id="frete">Grátis</span></div>
+    <div class="linha-conta"><span>Frete</span><span id="frete">Cotado pelo seu CEP</span></div>
     <div class="linha-conta total"><span>Total</span><b id="total">R$ 0,00</b></div>
     <button class="btn-cheio" id="pagar">Finalizar pedido</button>
     <button class="zap" id="pedir-zap">Falar no WhatsApp</button>
-    <p class="nota-pe">A cor é confirmada com você antes do envio.</p>
+    <p class="nota-pe">O frete é calculado pelo seu CEP e a cor é confirmada antes do envio.</p>
   </div>
 </aside>
 
@@ -548,7 +570,7 @@
   $("creditos").textContent = `© ${new Date().getFullYear()} ${CONFIG.marca}`;
   $("prazo-garantia").textContent = `${CONFIG.frete.prazoCapital} nas capitais`;
   $("prazo-faq").textContent = `${CONFIG.frete.prazoCapital} nas capitais e ${CONFIG.frete.prazoInterior} no interior`;
-  if (!CONFIG.frete.gratis) $("faixa").textContent = "Envio por Sedex para todo o Brasil";
+  if (CONFIG.frete.gratis) $("faixa").textContent = "Frete grátis para todo o Brasil · Envio por Sedex";
 
   const mecha = (p, extra = "") =>
     p.foto
@@ -617,8 +639,8 @@
     $("resumo-amarrados").textContent =
       `${amarrados} ${amarrados === 1 ? "amarrado" : "amarrados"} · ${amarrados * CONFIG.peso.total}g`;
     $("subtotal").textContent = brl(subtotal);
-    $("frete").textContent = CONFIG.frete.gratis ? "Grátis" : "A combinar";
-    $("total").textContent = brl(subtotal);
+    $("frete").textContent = CONFIG.frete.gratis ? "Grátis" : "Cotado pelo seu CEP";
+    $("total").textContent = brl(subtotal) + (CONFIG.frete.gratis ? "" : " + frete");
     $("pagar").disabled = !itens.length;
     $("pedir-zap").disabled = !itens.length;
     $("itens").innerHTML = itens.length
@@ -662,7 +684,8 @@
       `Olá! Quero fechar um pedido na *${CONFIG.marca}*:`, "",
       ...itens.map((e) => `• ${e.q}x ${nome(e.p)} — ${brl(e.q * e.p.preco)}`), "",
       `${amarrados} ${amarrados === 1 ? "amarrado" : "amarrados"} · ${amarrados * CONFIG.peso.total}g`,
-      `*Total: ${brl(total)}*`,
+      `*Total dos cabelos: ${brl(total)}*`, "",
+      `Meu CEP é: `,
     ].join("\n");
   }
 
@@ -757,6 +780,25 @@
     toast("Pagamento online entra no ar junto com a conta do Mercado Pago.");
   });
   $("rodape-zap").textContent = "WhatsApp " + CONFIG.whatsapp.replace(/^55(\d{2})(\d{4,5})(\d{4})$/, "($1) $2-$3");
+
+  // ---- rastreio ----
+  $("btn-rastrear").addEventListener("click", async () => {
+    const codigo = $("codigo-rastreio").value.trim().toUpperCase();
+    const pagina = "https://rastreamento.correios.com.br/app/index.php";
+    if (!codigo) {
+      $("nota-rastreio").textContent = "Digite o código que você recebeu no WhatsApp antes de continuar.";
+      $("codigo-rastreio").focus();
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(codigo);
+      $("nota-rastreio").textContent = `Código ${codigo} copiado. Cole no campo dos Correios, na aba que acabou de abrir.`;
+    } catch (_) {
+      $("codigo-rastreio").select();
+      $("nota-rastreio").textContent = `Copie o código ${codigo} e cole no site dos Correios, na aba que acabou de abrir.`;
+    }
+    window.open(pagina, "_blank", "noopener");
+  });
 
   desenharMenu();
   desenharGrade();
