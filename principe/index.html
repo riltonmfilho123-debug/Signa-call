@@ -209,6 +209,15 @@
   .resultado .txt { min-width: 0; }
   .resultado .txt strong { display: block; font-weight: 500; font-size: 1.05rem; }
   .resultado .txt span { color: var(--marfim-2); font-size: .9rem; }
+  .calc-intro { color: var(--marfim-2); max-width: 60ch; margin: 14px 0 0; }
+  .confirmar {
+    margin-top: 26px; padding: 24px; border: 1px solid var(--mel); border-radius: 2px;
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;
+  }
+  .confirmar strong { display: block; font-weight: 500; font-size: 1.02rem; }
+  .confirmar p { color: var(--marfim-2); font-size: .9rem; margin: 6px 0 0; max-width: 60ch; }
+  .confirmar button { white-space: nowrap; }
+  @media (max-width: 720px) { .confirmar { grid-template-columns: 1fr; } .confirmar button { width: 100%; } }
 
   /* ---------- procedência ---------- */
   .procedencia { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 30px; }
@@ -365,30 +374,37 @@
   <section class="bloco" id="calculadora">
     <div class="calc">
       <span class="olho">Antes de comprar</span>
-      <h2>Quantos amarrados você precisa</h2>
+      <h2>Quantos amarrados o seu cabelo pede</h2>
+      <p class="calc-intro">Não existe número fixo: depende do volume que você já tem e, principalmente, do resultado que você quer. A média fica entre 2 e 3 amarrados, mas quem procura um cabelo bem cheio costuma passar disso.</p>
       <div class="calc-campos">
-        <label class="campo"><span>Seu cabelo hoje</span>
-          <div class="opcoes" id="op-densidade">
-            <button data-d="fino" aria-pressed="true">Fino</button>
-            <button data-d="medio" aria-pressed="false">Médio</button>
-            <button data-d="grosso" aria-pressed="false">Cheio / grosso</button>
+        <label class="campo"><span>O volume do seu cabelo hoje</span>
+          <div class="opcoes" id="op-volume">
+            <button data-v="pouco" aria-pressed="true">Pouco cabelo</button>
+            <button data-v="medio" aria-pressed="false">Volume médio</button>
+            <button data-v="bastante" aria-pressed="false">Bastante cabelo</button>
           </div>
         </label>
-        <label class="campo"><span>O que você quer</span>
-          <div class="opcoes" id="op-objetivo">
-            <button data-o="comprimento" aria-pressed="true">Só comprimento</button>
-            <button data-o="volume" aria-pressed="false">Comprimento e volume</button>
-            <button data-o="total" aria-pressed="false">Transformação total</button>
+        <label class="campo"><span>O resultado que você quer</span>
+          <div class="opcoes" id="op-resultado">
+            <button data-r="discreto" aria-pressed="true">Discreto</button>
+            <button data-r="cheio" aria-pressed="false">Cheio e natural</button>
+            <button data-r="muito" aria-pressed="false">Bem cheio</button>
           </div>
         </label>
       </div>
       <div class="resultado">
-        <div class="n" id="calc-n">1</div>
+        <div class="n" id="calc-n">2</div>
         <div class="txt">
-          <strong id="calc-titulo">1 amarrado · 100g de cabelo</strong>
-          <span id="calc-texto">Suficiente para alongar sem mudar o volume.</span>
+          <strong id="calc-titulo">2 amarrados · 180g de cabelo</strong>
+          <span id="calc-texto">O volume que a maioria das clientes usa.</span>
         </div>
-        <button class="btn-vazio" data-ir="vitrine" style="margin-left:auto">Escolher o cabelo</button>
+      </div>
+      <div class="confirmar">
+        <div>
+          <strong>Quer ter certeza? Mande uma foto.</strong>
+          <p>Fotografe seu cabelo solto, na luz natural, de costas. A gente olha e diz exatamente quantos amarrados o seu caso pede — e já confirma o tom junto. Leva poucos minutos e não custa nada.</p>
+        </div>
+        <button class="btn-cheio" id="avaliar-foto">Enviar foto e receber a indicação</button>
       </div>
     </div>
   </section>
@@ -637,25 +653,40 @@
   }
 
   // ---- calculadora de amarrados ----
-  const escolha = { densidade: "fino", objetivo: "comprimento" };
-  const tabela = {
-    "fino|comprimento": [1, "Suficiente para alongar sem mudar o volume."],
-    "fino|volume": [2, "Alonga e já dá corpo ao cabelo fino."],
-    "fino|total": [3, "Comprimento e volume de transformação completa."],
-    "medio|comprimento": [2, "O cabelo médio precisa de dois para o comprimento ficar uniforme."],
-    "medio|volume": [3, "Alonga e engrossa sem deixar falha na aplicação."],
-    "medio|total": [4, "Volume forte, do tipo que aparece na foto."],
-    "grosso|comprimento": [3, "Cabelo cheio exige mais massa para o comprimento acompanhar."],
-    "grosso|volume": [4, "Mantém a densidade que você já tem e ganha comprimento."],
-    "grosso|total": [5, "Transformação completa em cabelo cheio."],
+  const escolha = { volume: "pouco", resultado: "discreto" };
+  const legendas = {
+    discreto: "Alonga sem mudar muito o volume que você já tem.",
+    cheio: "O ponto que a maioria das clientes procura: comprimento com corpo.",
+    muito: "Volume de impacto, daquele que muda o rosto na foto.",
   };
 
+  function faixaAmarrados() {
+    const chave = escolha.volume + "|" + escolha.resultado;
+    return (CONFIG.recomendacao && CONFIG.recomendacao[chave]) || [2, 3];
+  }
+
   function calcular() {
-    const [n, texto] = tabela[`${escolha.densidade}|${escolha.objetivo}`];
-    $("calc-n").textContent = n;
-    $("calc-titulo").textContent =
-      `${n} ${n === 1 ? "amarrado" : "amarrados"} · ${n * CONFIG.peso.cabelo}g de cabelo`;
-    $("calc-texto").textContent = texto;
+    const [min, max] = faixaAmarrados();
+    const g = (n) => n * CONFIG.peso.cabelo;
+    $("calc-n").textContent = min === max ? min : min + "–" + max;
+    $("calc-titulo").textContent = min === max
+      ? `${min} amarrados · ${g(min)}g de cabelo`
+      : `${min} a ${max} amarrados · ${g(min)}g a ${g(max)}g de cabelo`;
+    $("calc-texto").textContent = legendas[escolha.resultado];
+  }
+
+  function textoAvaliacao() {
+    const [min, max] = faixaAmarrados();
+    const volume = { pouco: "pouco cabelo", medio: "volume médio", bastante: "bastante cabelo" }[escolha.volume];
+    const querido = { discreto: "um resultado discreto", cheio: "cheio e natural", muito: "bem cheio" }[escolha.resultado];
+    const sugestao = min === max ? `${min} amarrados` : `${min} a ${max} amarrados`;
+    return [
+      `Olá! Quero a indicação de quantos amarrados eu preciso.`, "",
+      `• Meu cabelo hoje: ${volume}`,
+      `• Quero: ${querido}`,
+      `• O site sugeriu: ${sugestao}`, "",
+      `Vou enviar a foto do meu cabelo aqui na conversa.`,
+    ].join("\n");
   }
 
   // ---- eventos ----
@@ -683,14 +714,15 @@
       if (sacola[d.menos] <= 0) delete sacola[d.menos];
       salvar(); desenharSacola();
     }
-    if (d.d) { escolha.densidade = d.d; [...$("op-densidade").children].forEach((b) => b.setAttribute("aria-pressed", b === alvo)); calcular(); }
-    if (d.o) { escolha.objetivo = d.o; [...$("op-objetivo").children].forEach((b) => b.setAttribute("aria-pressed", b === alvo)); calcular(); }
+    if (d.v) { escolha.volume = d.v; [...$("op-volume").children].forEach((b) => b.setAttribute("aria-pressed", b === alvo)); calcular(); }
+    if (d.r) { escolha.resultado = d.r; [...$("op-resultado").children].forEach((b) => b.setAttribute("aria-pressed", b === alvo)); calcular(); }
   });
 
   $("abrir-carrinho").addEventListener("click", () => abrirGaveta(true));
   $("fechar-carrinho").addEventListener("click", () => abrirGaveta(false));
   $("veu").addEventListener("click", () => abrirGaveta(false));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") abrirGaveta(false); });
+  $("avaliar-foto").addEventListener("click", () => window.open(linkZap(textoAvaliacao()), "_blank", "noopener"));
   $("pedir-zap").addEventListener("click", () => window.open(linkZap(pedidoTexto()), "_blank", "noopener"));
   $("pagar").addEventListener("click", () => {
     window.open(linkZap(pedidoTexto()), "_blank", "noopener");

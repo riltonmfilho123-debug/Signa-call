@@ -27,6 +27,28 @@ const CONFIG = {
   },
 
   trocaDias: 7,
+
+  /* ----------------------------------------------------------
+     RECOMENDAÇÃO DE AMARRADOS
+     ----------------------------------------------------------
+     Não existe regra fixa: depende do volume do cabelo da cliente
+     e, principalmente, do resultado que ela quer. Estes números são
+     a média da experiência de balcão — ajuste conforme for vendendo.
+
+     Formato: "volumeAtual|resultadoDesejado": [mínimo, máximo]
+     em AMARRADOS. O site converte para gramas de cabelo sozinho.
+     ---------------------------------------------------------- */
+  recomendacao: {
+    "pouco|discreto":   [2, 2],
+    "pouco|cheio":      [2, 3],
+    "pouco|muito":      [4, 5],
+    "medio|discreto":   [2, 2],
+    "medio|cheio":      [3, 3],
+    "medio|muito":      [4, 5],
+    "bastante|discreto":[2, 3],
+    "bastante|cheio":   [3, 4],
+    "bastante|muito":   [5, 6],
+  },
 };
 
 /* ------------------------------------------------------------
