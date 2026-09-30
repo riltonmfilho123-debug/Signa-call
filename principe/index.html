@@ -209,7 +209,11 @@
   .resultado .txt { min-width: 0; }
   .resultado .txt strong { display: block; font-weight: 500; font-size: 1.05rem; }
   .resultado .txt span { color: var(--marfim-2); font-size: .9rem; }
-  .calc-intro { color: var(--marfim-2); max-width: 60ch; margin: 14px 0 0; }
+  .calc-intro { color: var(--marfim-2); max-width: 64ch; margin: 14px 0 0; }
+  .etiqueta {
+    display: block; font-size: .64rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--marfim-2); margin-bottom: 4px;
+  }
   .confirmar {
     margin-top: 26px; padding: 24px; border: 1px solid var(--mel); border-radius: 2px;
     display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;
@@ -376,7 +380,7 @@
     <div class="calc">
       <span class="olho">Antes de comprar</span>
       <h2>Quantos amarrados o seu cabelo pede</h2>
-      <p class="calc-intro">Não existe número fixo: depende do volume que você já tem e, principalmente, do resultado que você quer. A média fica entre 2 e 3 amarrados, e sobe conforme o comprimento: quanto mais longo o cabelo, mais massa ele pede para a ponta não ficar rala.</p>
+      <p class="calc-intro">Não existe número fixo: depende do volume que você já tem e, principalmente, do resultado que você quer. A média fica entre 2 e 3 amarrados, e sobe conforme o comprimento, porque quanto mais longo o cabelo, mais massa ele pede para a ponta não ficar rala. Daqui você já sai com uma boa noção — o número exato a gente fecha olhando o seu cabelo.</p>
       <div class="calc-campos">
         <label class="campo"><span>O volume do seu cabelo hoje</span>
           <div class="opcoes" id="op-volume">
@@ -404,14 +408,15 @@
       <div class="resultado">
         <div class="n" id="calc-n">2</div>
         <div class="txt">
+          <span class="etiqueta">Estimativa</span>
           <strong id="calc-titulo">2 amarrados · 180g de cabelo</strong>
           <span id="calc-texto">O volume que a maioria das clientes usa.</span>
         </div>
       </div>
       <div class="confirmar">
         <div>
-          <strong>Quer ter certeza? Mande uma foto.</strong>
-          <p>Fotografe seu cabelo solto, na luz natural, de costas. A gente olha e diz exatamente quantos amarrados o seu caso pede — e já confirma o tom junto. Leva poucos minutos e não custa nada.</p>
+          <strong>Agora manda uma foto que a gente fecha o número.</strong>
+          <p>Cabelo é caso a caso: dois cabelos do mesmo comprimento podem pedir quantidades bem diferentes, e isso só se vê olhando. Fotografe o seu solto, de costas, na luz natural. A atendente analisa, diz quantos amarrados o seu caso pede e já confirma o tom junto. Leva poucos minutos e não custa nada.</p>
         </div>
         <button class="btn-cheio" id="avaliar-foto">Enviar foto e receber a indicação</button>
       </div>
@@ -706,7 +711,7 @@
       `• Meu cabelo hoje: ${volume}`,
       `• Comprimento que quero: ${escolha.comprimento >= 75 ? "75cm ou mais" : "até " + escolha.comprimento + "cm"}`,
       `• Quero: ${querido}`,
-      `• O site sugeriu: ${sugestao}`, "",
+      `• Estimativa do site: ${sugestao}`, "",
       `Vou enviar a foto do meu cabelo aqui na conversa.`,
     ].join("\n");
   }
